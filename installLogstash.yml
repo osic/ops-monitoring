@@ -1,0 +1,60 @@
+---
+- name: install ElK stack
+  hosts: elastic-logstash
+  become: true
+  vars_files:
+    - vars/variables.yml
+  tasks:
+    - name: add Logstash to apt sources list
+      apt_repository: repo='deb http://packages.elastic.co/logstash/2.2/debian stable main' state=present
+    - name: Ensure Logstash is installed.
+      apt: name=logstash state=present update_cache=yes
+#    - name: create directories for ssl certs
+#      file: path={{ item }} state=directory
+#      with_items:
+#        - /etc/pki/tls/private
+#        - /etc/pki/tls/certs
+#    - name: generate ssl certificates to be used by any shippers to logstash
+#      command: >
+#        openssl req -new -nodes -sha256 -x509 -subj
+#        "{{ logstash_ssl_self_signed_subject }}"
+#        -days 3650
+#        -keyout /etc/pki/tls/private/logstash-forwarder.key
+#        -out /etc/pki/tls/certs/logstash-forwarder.crt
+#        -extensions v3_ca
+#        creates=/etc/pki/tls/certs/logstash-forwarder.crt
+#      register: out
+#      tags: exp
+#    - debug: var=out
+#      tags: exp
+#    - fetch: src=/etc/pki/tls/certs/logstash-forwarder.crt dest=/opt/ flat=yes
+    - name: Drop Logstash conf for beats input
+      template:
+        src: templates/02-beats-input.conf.j2
+        dest: /etc/logstash/conf.d/02-beats-input.conf
+    - name: Drop Logstash conf for beats input
+      template:
+        src: templates/10-syslog-filter.conf.j2
+        dest: /etc/logstash/conf.d/10-syslog-filter.conf
+    - name: Drop Logstash conf for beats output
+      template:
+        src: templates/30-elasticsearch-output.conf.j2
+        dest: /etc/logstash/conf.d/30-elasticsearch-output.conf
+
+    - shell: service logstash configtest
+      register: conf_success
+    - debug: var=conf_success
+    - name: Enable and restart logstash
+      service:
+        name: "logstash"
+        enabled: true
+        state: restarted
+
+
+
+
+
+
+
+
+
