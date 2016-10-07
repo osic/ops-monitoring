@@ -47,7 +47,7 @@ Create the containers
 
 .. code-block:: bash
 
-   openstack-ansible lxc-containers-create.yml  -e 'container_group=elastic-logstash:kibana'
+   openstack-ansible /opt/openstack-ansible/playbooks/lxc-containers-create.yml -e 'container_group=elastic-logstash:kibana'
 
 install master/data elasticsearch nodes on the elastic-logstash containers
 
@@ -72,6 +72,12 @@ InstallKibana on the kibana container
 .. code-block:: bash
 
     openstack-ansible installKibana.yml
+
+(Optional) Reverse proxy kibana container to your loadbalancer host
+
+.. code-block:: bash
+
+    openstack-ansible reverseProxyKibana.yml
 
 load topbeat indices into elastic-search and kibana
 

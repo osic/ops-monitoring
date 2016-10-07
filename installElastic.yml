@@ -5,7 +5,7 @@
   vars_files:
     - vars/variables.yml
   tasks:
-    - name: InfluxDB datapath bind mount
+    - name: elasticsearch datapath bind mount
       lxc_container:
         name: "{{ inventory_hostname }}"
         container_command: |

@@ -1,5 +1,5 @@
 # elastic search vars
-elastic_interface: [_eth1_, _local_]
+elastic_interface: "['_eth1_', '_local_']"
 elastic_port: 9200
 cluster_name: openstack_elk
 node_name: ${HOSTNAME}

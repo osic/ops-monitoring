@@ -1,5 +1,5 @@
 ---
-- name: install kibana
+- name: load beats dashboards to Kibana
   hosts: kibana
   become: true
   vars_files:
